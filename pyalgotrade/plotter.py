@@ -20,6 +20,8 @@
 
 import collections
 
+import demjson
+
 import broker
 
 import matplotlib.pyplot as plt
@@ -442,13 +444,17 @@ class StrategyPlotter(object):
 
         fig, mplSubplots = self.__buildFigureImpl(fromDateTime, toDateTime)
         fig.autofmt_xdate()
-        #plt.show()
+        # plt.show()
         ax = plt.gca()
         line = ax.lines[0]
         xlist = line.get_xdata()
         xlist = xlist.tolist()
+        xliststr = [xt.strftime("%Y %B %d") for xt in xlist]
         ylist = line.get_ydata()
         ylist = ylist.tolist()
-        xys = zip(xlist, ylist)
+        xys = zip(xliststr, ylist)
         xyDict = dict( (x,y) for x,y in xys)
-        print xyDict
+        # print xyDict
+        xyJson = demjson.encode(xyDict)
+        return xyJson
+

@@ -6,6 +6,18 @@ from pyalgotrade.tools import yahoofinance
 from pyalgotrade.stratanalyzer import sharpe
 from pyalgotrade.talibext import indicator
 
+from kafka.client import KafkaClient
+from kafka.producer import SimpleProducer
+
+import sys
+
+#向脚本传入参数
+start = int(sys.argv[1])
+end = int(sys.argv[2])
+code = sys.argv[3]
+sid = sys.argv[4]
+
+
 
 def algoparser(**kwargs):
     """
@@ -41,30 +53,27 @@ def algoparser(**kwargs):
 
     plt = plotter.StrategyPlotter(strat,True,False,False)
     strat.run()
-    plt.plot()
-
+    stat = plt.plot()
+    return stat
 
 
 
 if __name__ == '__main__':
-    algo = """
-class Strategy(strategy.BacktestingStrategy):
-    def __init__(self, feed, instrument):
-        strategy.BacktestingStrategy.__init__(self, feed)
-        self.__instrument = instrument
-        self.__sma = None
+    client = KafkaClient("localhost:9092")
+    producer = SimpleProducer(client)
 
-    def onBars(self, bars):
-        closeDs = self.getFeed()[self.__instrument].getCloseDataSeries()
-        self.__sma = indicator.SMA(closeDs, 100)
+    # Stat = algoparser(start=2011, end=2012, code=algo, sid="yhoo")
+    # print type(Stat)
 
-    def getSMA(self):
-        ret = None
-        if self.__sma is not None:
-            ret = self.__sma[-1]
-        return ret
-"""
-    algoparser(start=2011, end=2012, code=algo, sid="yhoo")
+    #读取储存在txt文件的算法
+    with open(code, 'r') as f:
+        code = f.read()
+
+    args = {'start': start, 'end':end, 'code':code, "sid":sid}
+
+    Stat = algoparser(**args)
+
+    producer.send_message("plot", Stat)
 
 
 
