@@ -53,7 +53,7 @@ def algoparser(**kwargs):
 
     plt = plotter.StrategyPlotter(strat,True,False,False)
     strat.run()
-    stat = plt.plot()
+    stat = plt.plotjson()
     return stat
 
 

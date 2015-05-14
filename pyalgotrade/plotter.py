@@ -433,7 +433,7 @@ class StrategyPlotter(object):
         fig.autofmt_xdate()
         return fig
 
-    def plot(self, fromDateTime=None, toDateTime=None):
+    def plotjson(self, fromDateTime=None, toDateTime=None):
         """Plots the strategy execution. Must be called after running the strategy.
 
         :param fromDateTime: An optional starting datetime.datetime. Everything before it won't get plotted.
@@ -458,3 +458,15 @@ class StrategyPlotter(object):
         xyJson = demjson.encode(xyDict)
         return xyJson
 
+    def plot(self, fromDateTime=None, toDateTime=None):
+        """Plots the strategy execution. Must be called after running the strategy.
+
+        :param fromDateTime: An optional starting datetime.datetime. Everything before it won't get plotted.
+        :type fromDateTime: datetime.datetime
+        :param toDateTime: An optional ending datetime.datetime. Everything after it won't get plotted.
+        :type toDateTime: datetime.datetime
+        """
+
+        fig, mplSubplots = self.__buildFigureImpl(fromDateTime, toDateTime)
+        fig.autofmt_xdate()
+        plt.show()
