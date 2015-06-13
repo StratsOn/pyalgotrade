@@ -11,7 +11,7 @@ from kafka.producer import SimpleProducer
 
 import sys
 
-#向脚本传入参数
+#向脚本传入参数    
 start = int(sys.argv[1])
 end = int(sys.argv[2])
 code = sys.argv[3]
