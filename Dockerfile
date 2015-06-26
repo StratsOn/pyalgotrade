@@ -14,6 +14,7 @@ RUN cd /;tar xf ta-lib-0.4.0-src.tar.gz; cd ta-lib; ./configure; make && make in
 
 RUN pip install ta-lib
 
+RUN apt-get install -y python-demjson
+
 ADD . /data/engine
 
-RUN apt-get install -y python-demjson
